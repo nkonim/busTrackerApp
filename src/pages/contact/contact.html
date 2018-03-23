@@ -1,17 +1,18 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Contact
+      Bus Time
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
-    <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      @ionicframework
-    </ion-item>
-  </ion-list>
+  <ion-spinner *ngIf="loading"></ion-spinner>
+  <ion-item  *ngFor="let info of bus" id="busList" [ngStyle]="{'height': '100px' }">
+           <h1 id="busName"> Bus A </h1>
+           <ion-icon name="timer"></ion-icon>
+           <span id="busArrival" icon>{{info.duration.text}}</span><br>
+           <ion-icon name="locate"></ion-icon>
+           <span id="busAddress">{{info.end_address}}</span>
+  </ion-item>
 </ion-content>

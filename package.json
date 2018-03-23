@@ -1,38 +1,77 @@
 {
-  "name": "final",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
-  "private": true,
-  "scripts": {
-    "clean": "ionic-app-scripts clean",
-    "build": "ionic-app-scripts build",
-    "lint": "ionic-app-scripts lint",
-    "ionic:build": "ionic-app-scripts build",
-    "ionic:serve": "ionic-app-scripts serve"
-  },
-  "dependencies": {
-    "@angular/common": "4.4.3",
-    "@angular/compiler": "4.4.3",
-    "@angular/compiler-cli": "4.4.3",
-    "@angular/core": "4.4.3",
-    "@angular/forms": "4.4.3",
-    "@angular/http": "4.4.3",
-    "@angular/platform-browser": "4.4.3",
-    "@angular/platform-browser-dynamic": "4.4.3",
-    "@ionic-native/core": "4.3.2",
-    "@ionic-native/splash-screen": "4.3.2",
-    "@ionic-native/status-bar": "4.3.2",
-    "@ionic/storage": "2.0.1",
-    "ionic-angular": "3.7.1",
-    "ionicons": "3.0.0",
-    "rxjs": "5.4.3",
-    "sw-toolbox": "3.6.0",
-    "zone.js": "0.8.18"
-  },
-  "devDependencies": {
-    "@ionic/app-scripts": "3.0.1",
-    "typescript": "2.3.4"
-  },
-  "description": "An Ionic project"
+    "name": "final",
+    "version": "0.0.1",
+    "author": "Ionic Framework",
+    "homepage": "http://ionicframework.com/",
+    "private": true,
+    "scripts": {
+        "clean": "ionic-app-scripts clean",
+        "build": "ionic-app-scripts build",
+        "lint": "ionic-app-scripts lint",
+        "ionic:build": "ionic-app-scripts build",
+        "ionic:serve": "ionic-app-scripts serve"
+    },
+    "dependencies": {
+        "@angular/animations": "^5.2.8",
+        "@angular/common": "4.4.3",
+        "@angular/compiler": "4.4.3",
+        "@angular/compiler-cli": "4.4.3",
+        "@angular/core": "^4.4.3",
+        "@angular/flex-layout": "^2.0.0-beta.10-4905443",
+        "@angular/forms": "4.4.3",
+        "@angular/http": "4.4.3",
+        "@angular/platform-browser": "4.4.3",
+        "@angular/platform-browser-dynamic": "4.4.3",
+        "@ionic-native/core": "4.3.2",
+        "@ionic-native/geolocation": "^4.5.3",
+        "@ionic-native/google-maps": "^4.5.3",
+        "@ionic-native/splash-screen": "4.3.2",
+        "@ionic-native/status-bar": "4.3.2",
+        "@ionic/storage": "2.0.1",
+        "@types/google-maps": "^3.2.0",
+        "angular": "^1.6.9",
+        "angularfire2": "^5.0.0-rc.5-next",
+        "cordova-android": "^6.4.0",
+        "cordova-plugin-compat": "^1.2.0",
+        "cordova-plugin-device": "^1.1.7",
+        "cordova-plugin-geolocation": "^2.4.3",
+        "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
+        "cordova-plugin-ionic-webview": "^1.1.16",
+        "cordova-plugin-splashscreen": "^4.1.0",
+        "cordova-plugin-whitelist": "git+https://github.com/apache/cordova-plugin-whitelist.git",
+        "firebase": "^4.11.0",
+        "ionic": "^3.19.1",
+        "ionic-angular": "3.7.1",
+        "ionic-plugin-keyboard": "^2.2.1",
+        "ionicons": "3.0.0",
+        "ngx-toastr": "^8.3.0",
+        "rxjs": "5.4.3",
+        "sw-toolbox": "3.6.0",
+        "zone.js": "0.8.18"
+    },
+    "devDependencies": {
+        "@angular/cli": "^1.4.9",
+        "@ionic/app-scripts": "^3.1.8",
+        "typescript": "^2.7.2"
+    },
+    "description": "An Ionic project",
+    "cordova": {
+        "plugins": {
+            "cordova-plugin-googlemaps": {
+                "API_KEY_FOR_ANDROID": "AIzaSyD2_ZkWXxNbnh5D0rA2mxRtKiXTHQ0n3dA",
+                "API_KEY_FOR_IOS": "AIzaSyD2_ZkWXxNbnh5D0rA2mxRtKiXTHQ0n3dA"
+            },
+            "cordova-plugin-device": {},
+            "cordova-plugin-ionic-webview": {},
+            "cordova-plugin-splashscreen": {},
+            "cordova-plugin-whitelist": {},
+            "ionic-plugin-keyboard": {},
+            "cordova-plugin-geolocation": {
+                "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"
+            }
+        },
+        "platforms": [
+            "android"
+        ]
+    }
 }

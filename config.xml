@@ -1,10 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.lex.bustrack" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MyApp</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
     <content src="index.html" />
     <access origin="*" />
+    <allow-intent href="*" />
+    <allow-navigation href="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -16,11 +18,6 @@
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="FadeSplashScreenDuration" value="300" />
-
-    <!--
-      Change these to configure how the splashscreen displays and fades in/out.
-      More info here: https://github.com/apache/cordova-plugin-splashscreen
-    -->
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
@@ -81,9 +78,43 @@
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
     </platform>
-    <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
-    <plugin name="cordova-plugin-whitelist" spec="1.3.1" />
-    <plugin name="cordova-plugin-device" spec="1.1.4" />
-    <plugin name="cordova-plugin-splashscreen" spec="~4.0.1" />
-    <plugin name="cordova-plugin-ionic-webview" spec="^1.1.11" />
+    <allow-navigation href="http://192.168.1.248:8100" />
+    <allow-navigation href="http://172.20.10.2:8100" />
+    <allow-navigation href="http://10.90.90.217:8100" />
+    <allow-navigation href="http://172.80.8.210:8100" />
+    <allow-navigation href="http://10.90.90.88:8100" />
+    <allow-navigation href="http://10.90.90.99:8100" />
+    <allow-navigation href="http://192.168.3.131:8100" />
+    <allow-navigation href="http://10.90.90.193:8100" />
+    <allow-navigation href="http://10.90.90.185:8100" />
+    <allow-navigation href="http://10.10.61.18:8100" />
+    <plugin name="cordova-plugin-device" spec="^1.1.4" />
+    <plugin name="cordova-plugin-googlemaps" spec="git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps">
+        <variable name="API_KEY_FOR_ANDROID" value="AIzaSyD2_ZkWXxNbnh5D0rA2mxRtKiXTHQ0n3dA" />
+        <variable name="API_KEY_FOR_IOS" value="AIzaSyD2_ZkWXxNbnh5D0rA2mxRtKiXTHQ0n3dA" />
+    </plugin>
+    <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
+    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <allow-navigation href="http://10.10.61.18:8101" />
+    <allow-navigation href="http://10.10.28.83:8101" />
+    <allow-navigation href="http://10.10.26.95:8101" />
+    <allow-navigation href="http://10.10.55.229:8101" />
+    <allow-navigation href="http://10.90.90.14:8101" />
+    <allow-navigation href="http://192.168.1.4:8101" />
+    <allow-navigation href="http://10.10.61.18:8102" />
+    <allow-navigation href="http://10.10.58.65:8102" />
+    <allow-navigation href="http://10.10.55.229:8100" />
+    <plugin name="cordova-plugin-whitelist" spec="git+https://github.com/apache/cordova-plugin-whitelist.git" />
+    <allow-navigation href="http://10.90.90.201:8101" />
+    <allow-navigation href="http://169.254.24.33:8101" />
+    <allow-navigation href="http://169.254.24.33:8100" />
+    <allow-navigation href="http://10.90.90.201:8100" />
+    <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
+    </plugin>
+    <allow-navigation href="http://10.10.90.147:8100" />
+    <allow-navigation href="http://192.168.1.16:8100" />
+    <engine name="android" spec="^6.4.0" />
+    <allow-navigation href="http://10.10.62.97:8100" />
 </widget>

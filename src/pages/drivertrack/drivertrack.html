@@ -1,0 +1,91 @@
+<!--<ion-header>
+ <ion-item *ngFor="let loc of locati">
+    <h1 >{{loc}}</h1>
+    </ion-item>
+</ion-header>-->
+
+<ion-content>
+       <!--<button class="men" ion-button secondary menuToggle>Toggle Menu</button>-->
+
+  <!--<ion-card class="onMap" *ngIf="loaded" >
+    <div class="busName">
+        <ion-card-content  *ngFor="let info of bussesInfo">
+           <span id="Bus Name"> Bus : {{info.name}} </span> <br>         
+       <button (click)="toggle()"  ion-button color="secondary">{{trackstatus}}</button>
+        </ion-card-content>
+        </div>  
+    </ion-card>-->
+
+        <ion-fab  top right *ngIf="loaded">
+<button ion-fab menuToggle>
+      <!--<ion-icon name="menu"></ion-icon>-->
+      Stops
+    </button>
+    
+        </ion-fab>
+
+    <ion-fab  bottom right *ngIf="loaded">
+  
+   <button class="plus" color="dark" (click)="addSeat()"  ion-fab mini > <ion-icon name="add"></ion-icon> </button>
+ </ion-fab>
+
+  <ion-fab  bottom right *ngIf="loaded">
+     <button class="seat" ion-fab  color="dark" > <p> {{busSeats}} </p> </button>
+ </ion-fab>
+
+ <ion-fab bottom right *ngIf="loaded">
+   <button ion-fab mini color="dark" (click)="reduceSeat()" >  <ion-icon name="remove"></ion-icon> </button>
+ </ion-fab>
+
+  <ion-spinner *ngIf="spin"></ion-spinner>
+
+<div *ngIf="viewM" id="map">
+   
+</div>
+<ion-item *ngIf="setBus">
+  <ion-label>Select Bus</ion-label>
+  <ion-select id=busid [(ngModel)]="busnum" (ionChange)="chooseItem($event)" >
+    <ion-option *ngFor="let buss of busses" [value]="buss">
+        {{ buss }}   
+    </ion-option>
+  </ion-select>
+  
+</ion-item>
+
+<div class="viewInfo" *ngIf="confirmpage">
+       <ng-container >
+
+           <span id="Bus Name"> Bus Name: {{busToTrack}} </span> <br>
+           <!--<span id="Start Point" >Start Location: {{info.start}}</span><br>
+           <span id="End Point">End Location: {{info.end}}</span><br>-->
+           <span id="Seat Number">{{busSeats}} seats</span><br>
+
+              <ion-list >
+       <ion-item  *ngFor="let stop of busStopsNames" >
+                     <span id="Bus Name"> {{stop}} </span> <br>
+        </ion-item>
+               </ion-list>
+
+     </ng-container>
+
+<button (click)="showMap()" (click)="repeat()"  ion-button color="secondary">Track</button>
+</div>
+
+
+<!--
+<div class="tap-reveal-container" *ngIf="confirmpage" (click)="toggle()" [class.tap-reveal-after]="toggled">
+ 
+    <div class="before">
+        <ng-content select=".tap-reveal-before"></ng-content>
+        <h2> Track </h2>
+    </div>
+ 
+    <div class="after">
+        <ng-content select=".tap-reveal-after"></ng-content>
+        <h2> Stop </h2>
+    </div>
+</div>-->
+
+
+   
+</ion-content>
