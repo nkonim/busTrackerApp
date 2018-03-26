@@ -43,7 +43,10 @@ export class DriverStopsPage {
 
     
   }
-
+  closeModal(){
+        this.navCtrl.pop();
+    }
+    
 ionViewDidLoad(){
     this.loading=true;
     this.getLocation();

@@ -3,6 +3,7 @@ import { GPSRecord } from './../../interfaces/GPSRecord';
 import { User } from './../../interfaces/User';
 import { Message } from './../../interfaces/Message';
 import { Bus } from './../../interfaces/Bus';
+import { Wait } from './../../interfaces/Wait';
 import { Seats } from './../../interfaces/Seats';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
@@ -26,11 +27,13 @@ export class FirebaseServiceProvider {
     locRef = null;
     userRef = null;
     busRef = null;
+    waitRef = null;
     stopsRef = null;
     seatsRef = null;
     routesRef = null;
     messRef = null;
     daKey = null;
+    waitURL: string = 'waiting';
     userURL: string = 'user-list';
     baseURL: string = 'location-list';
     busURL: string = 'bus-list';
@@ -44,6 +47,7 @@ export class FirebaseServiceProvider {
        this.locRef = afDb.list(this.baseURL);
        this.userRef = afDb.list(this.userURL);
        this.busRef = afDb.list<Bus>(this.busURL);
+        this.waitRef = afDb.list<Wait>(this.waitURL);
        this.stopsRef = afDb.object(this.stopsURL);
         this.routesRef = afDb.list<Routes>(this.routesURL);
         this.seatsRef = afDb.list(this.seatsURL);
@@ -106,6 +110,11 @@ export class FirebaseServiceProvider {
     ref => ref.orderByChild('email').equalTo(email)).valueChanges();
   }
   
+  getWaitInfo(id: any){
+      return this.afDb.list<Wait>(this.waitURL, 
+    ref => ref.orderByChild('stop_id').equalTo(id)).valueChanges();
+  }
+
   getBusId(name: any){
       return this.afDb.list(this.seatsURL, 
     ref => ref.orderByChild('bus').equalTo(name)).stateChanges();

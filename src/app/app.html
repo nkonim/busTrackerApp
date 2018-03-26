@@ -1,14 +1,16 @@
-<ion-menu persistent='true' swipeBackEnabled="false" side="right" id="main-menu" type="overlay" [content]="content">
+<ion-menu persistent='true' [swipeEnabled]="false" side="right" id="main-menu" type="overlay" [content]="content">
   <ion-header>
     <ion-toolbar>
-      <ion-title>Bus {{bus}} Stops</ion-title>
+      <ion-title>Bus {{bus}} <br> Stops & Arrival Time </ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
       <ion-list >
        <ion-item  *ngFor="let stop of allStops" >
-          <span id="Bus Name"> {{stop}} </span> <br>
+          <h2 id="Bus Name"> {{stop.stop}} </h2> 
+          <span> arriving in {{stop.eta}} </span> <br>
+          <span> {{stop.pass}} passengers tracking </span>
         </ion-item>
                </ion-list>
   </ion-content>

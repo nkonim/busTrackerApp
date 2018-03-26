@@ -1,7 +1,5 @@
 <!--<ion-header>
- <ion-item *ngFor="let loc of locati">
-    <h1 >{{loc}}</h1>
-    </ion-item>
+
 </ion-header>-->
 
 <ion-content>
@@ -15,6 +13,26 @@
         </ion-card-content>
         </div>  
     </ion-card>-->
+<!--<ion-fab  bottom left *ngIf="loaded">
+<button (click)="toggle()" ion-fab menuToggle>
+      {{trackstatus}}
+    </button>
+    
+        </ion-fab>-->
+    <ion-fab  bottom right *ngIf="!loaded">
+             <button ion-fab (click)="logout()"> Log Out</button>
+    </ion-fab>
+
+    <ion-fab bottom right *ngIf="loaded">
+   <button ion-fab > <ion-icon name="menu"></ion-icon> </button>
+   <ion-fab-list side="top">
+        <button ion-fab color="primary" (click)="openMess()"><ion-icon name="mail"></ion-icon> </button>
+   </ion-fab-list>
+   <ion-fab-list side="left">
+    <button ion-fab id="track" color="danger" (click)="toggle()"> <ion-icon name="locate"></ion-icon></button>
+     <button ion-fab (click)="logout()" color="primary"> <p> Log Out </p></button>
+   </ion-fab-list>
+ </ion-fab>
 
         <ion-fab  top right *ngIf="loaded">
 <button ion-fab menuToggle>
@@ -24,17 +42,17 @@
     
         </ion-fab>
 
-    <ion-fab  bottom right *ngIf="loaded">
+    <ion-fab   middle right *ngIf="loaded">
   
    <button class="plus" color="dark" (click)="addSeat()"  ion-fab mini > <ion-icon name="add"></ion-icon> </button>
  </ion-fab>
 
-  <ion-fab  bottom right *ngIf="loaded">
+  <ion-fab   middle right *ngIf="loaded">
      <button class="seat" ion-fab  color="dark" > <p> {{busSeats}} </p> </button>
  </ion-fab>
 
- <ion-fab bottom right *ngIf="loaded">
-   <button ion-fab mini color="dark" (click)="reduceSeat()" >  <ion-icon name="remove"></ion-icon> </button>
+ <ion-fab  middle right *ngIf="loaded">
+   <button ion-fab mini class="minus" color="dark" (click)="reduceSeat()" >  <ion-icon name="remove"></ion-icon> </button>
  </ion-fab>
 
   <ion-spinner *ngIf="spin"></ion-spinner>
@@ -44,7 +62,7 @@
 </div>
 <ion-item *ngIf="setBus">
   <ion-label>Select Bus</ion-label>
-  <ion-select id=busid [(ngModel)]="busnum" (ionChange)="chooseItem($event)" >
+  <ion-select id="busid" [(ngModel)]="busnum" (ionChange)="chooseItem($event)" >
     <ion-option *ngFor="let buss of busses" [value]="buss">
         {{ buss }}   
     </ion-option>
@@ -67,8 +85,11 @@
                </ion-list>
 
      </ng-container>
+ <ion-fab bottom center>
 
-<button (click)="showMap()" (click)="repeat()"  ion-button color="secondary">Track</button>
+<button ion-fab  color="primary" (click)="showMap()" (click)="repeat()" color="secondary">Track</button>
+
+ </ion-fab>
 </div>
 
 

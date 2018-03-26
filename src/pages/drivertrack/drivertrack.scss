@@ -1,12 +1,12 @@
 page-drivertrack {
-    // .pulse-button{
-    //     display: block;
-    //     border:none;
-    //     border-radius: 50%;
-    //     cursor: pointer;
-    //     box-shadow: 0 0 0 0 rgba(#7a1616, 5);
-    //     animation: pulse 1.5s infinite;
-    // }
+//     .pulse-button{
+//         display: block;
+//         border:none;
+//         border-radius: 50%;
+//         cursor: pointer;
+//         box-shadow: 0 0 0 0 rgba(#7a1616, 5);
+//         animation: pulse 1.5s infinite;
+//     }
 //     .alert-md .alert-title {
 //     font-size: 15px;
 // }
@@ -40,19 +40,22 @@ ion-card {
         }
 
         .seat{
-             bottom: 55px;
+             bottom: 68px;
                  width: 60px;
     height: 60px;
         }
         ion-fab[bottom] {
-    bottom: 60px;
+    bottom: 30px;
     right: 20px;
 }
 
  ion-fab {
    opacity: 0.95;
 }
-
+.fab-in-list.show {
+    height: 50px;
+    width: 50px;
+}
 
         .card-content{
             padding: 10px;
@@ -66,11 +69,19 @@ ion-card {
 //     z-index: 1000;
 // }
 .plus{
-    bottom: 110px;
+    bottom: 130px;
+}
+
+.startTrack{
+    height: 60px;
+    width: 60px;
 }
 .men{
     display: block !important;
 
+}
+ion-fab[middle]{
+    margin-top:0px; 
 }
 #map {
         height: 100%;
@@ -80,10 +91,18 @@ ion-card {
     // .item-ios{
     //         margin-top: 40vh;
     // }
+    #track{
+        font-size: 3.9rem;
+        box-shadow: 0 0 0 0 rgba(#7a1616, 5);
+        animation: pulse 1.5s infinite;
+    }
     h2 {
               position: absolute;
     margin-left: 70px;
     margin-top: 80px;
+}
+.fab .button-inner{
+    font-size: 12px;
 }
     .pulse-button-hover{
         animation: none;

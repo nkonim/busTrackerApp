@@ -84,7 +84,7 @@ export class LoginPage {
         this.userType=resp[0].type;
         console.log(this.userType);
         if(this.userType=="Driver"){
-        this.navCtrl.setRoot('DriverTabsPage');
+        this.navCtrl.setRoot('DriverTrackPage');
       }
         if(this.userType=="Rider"){
         this.navCtrl.setRoot('TabsPage');

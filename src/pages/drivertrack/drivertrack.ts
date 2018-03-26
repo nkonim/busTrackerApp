@@ -1,5 +1,7 @@
+import { LoginPage } from './../login/login';
+import { DriverMessPage } from './../drivermess/drivermess';
 import { Component, transition, style } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController,IonicPage,ModalController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -25,7 +27,7 @@ import {
   MarkerIcon,
   LatLng
 } from '@ionic-native/google-maps';
-
+@IonicPage()
 @Component({
   selector: 'page-drivertrack',
   templateUrl: 'drivertrack.html'
@@ -33,7 +35,7 @@ import {
 export class DriverTrackPage {
   
   loaded:boolean;
-  getURL: string  = "http://192.168.1.4/final/index.php";
+  // getURL: string  = "http://192.168.1.4/final/index.php";
   toggled: boolean = false;
   locati: any = [];
   busses: any = [];
@@ -41,9 +43,11 @@ export class DriverTrackPage {
   busStopsNames: any = [];
   busStopsLoca: any  = [];
   bussesInfo:  any = [];
+  stopsAndEta: any = [];
   theRoute = null;
   lon:any;
   lat:any;
+  stopTime:string;
   track:any;
   dataArray:any;
   busnum:any;
@@ -55,6 +59,7 @@ export class DriverTrackPage {
   start: any;
   end:any;
   endName: any;
+  waitingPass: any;
   spin:boolean;
   // mapElement: HTMLElement;
   num:string;
@@ -75,12 +80,12 @@ export class DriverTrackPage {
   directionsDisplay = new google.maps.DirectionsRenderer(
   {suppressMarkers: true});
   
-  constructor(public navCtrl: NavController, private geolocation: Geolocation,
+  constructor(public navCtrl: NavController, private modalCtrl: ModalController, private geolocation: Geolocation,
   public http:Http, public afDatabase: AngularFireDatabase, private firebaseService : FirebaseServiceProvider,
   private googleMaps: GoogleMaps, public popoverCtrl: PopoverController, public events: Events) {
     // this.firebaseService.addStops();
   }
-
+  
   ngOnInit() {
     this.firebaseService.getBusList().subscribe((resp)=>{
       // this.busses.push(resp);
@@ -146,9 +151,8 @@ export class DriverTrackPage {
           i++;
         }
         var ready = "yes";
-        this.events.publish('stops:added', JSON.stringify(this.busStopsNames),this.busToTrack);
         localStorage.setItem('ready', ready);
-
+        
         this.latMap=this.busStops[len-1].stop_lat;
         this.lonMap=this.busStops[len-1].stop_lon;
         localStorage.setItem('endLat', this.latMap);
@@ -202,6 +206,13 @@ export class DriverTrackPage {
     , 5000);
   }
   
+  openMess(){
+        let modal = this.modalCtrl.create(DriverMessPage);
+        modal.present();
+      }
+logout(){
+          this.navCtrl.setRoot(LoginPage);
+}
   stop(){ 
     clearInterval(this.track);
     this.track=0;
@@ -286,6 +297,7 @@ export class DriverTrackPage {
                           this.loaded=true;
                           this.startNavigating();
                           this.addMarkers();
+                          console.log("out");
                           // this.getSpecific();
                           //alert(this.lon);
                           // resp.coords.latitude
@@ -365,206 +377,287 @@ export class DriverTrackPage {
                             
                             // addMarkerEnd(posi){
                               
-                            //   if((this.end==null)|| (this.end=="")){
-                            //     this.end = new google.maps.Marker({
-                            //       map: this.map,
-                            //       position: posi
-                            //     });
-                                
-                            //     let content = "<p>Bus " + this.busToTrack + " will arrive at " +this.endName+" in about " + this.time + " </p>";
-                            //     this.addInfoWindow(this.end, content);
-                            //   }
-                            //   else{
-                            //     this.end.setPosition(posi);
-                            //   }
-                              
-                            // }
-                            
-                            addMarkers(){
-                              var i = 0;
-                              var len = this.busStops.length;
-                              var image = {
-                              url: '../assets/imgs/stop.png'};
-                              for (; i < len; ) {
-                                this.num = this.busStops[i].stop_sequence;
-                                let locMark = new google.maps.LatLng(this.busStops[i].stop_lat, this.busStops[i].stop_lon);
-                                  let mark = new google.maps.Marker({
-                                    map: this.map,
-                                    position: locMark,
-                                    icon: image,
-                                    label: {text:""+this.num, color:"white"}
-                                  });
+                              //   if((this.end==null)|| (this.end=="")){
+                                //     this.end = new google.maps.Marker({
+                                  //       map: this.map,
+                                  //       position: posi
+                                  //     });
                                   
-                                  let content = "<p>" + this.busStopsNames[i]+ " </p>";
-                                  this.addInfoWindow(mark, content);
-                                  // mark.setLabel(""+this.num);
-                                  mark.setPosition(locMark);
-                                  i++;
-                              }
-                            }
-                            
-                            showMap(){
-                              this.confirmpage=false;
-                              this.setBus=false;
-                              
-                              this.viewM=true;
-                              this.viewMap();
-                            }
-                            
-                            addInfoWindow(marker, content){
-                              
-                              let infoWindow = new google.maps.InfoWindow({
-                                content: content
-                              });
-                              
-                              google.maps.event.addListener(marker, 'click', () => {
-                                infoWindow.open(this.map, marker);
-                              });
-                            }
-                            
-                            startNavigating(){
-                              this.map.clear;
-                              var polylineOptionsActual = new google.maps.Polyline({
-                                strokeOpacity: 1,
-                                strokeWeight: 1
-                              });
-                              this.directionsDisplay.setMap(this.map);
-                              
-                              this.directionsService.route({
-                                origin: {lat:this.buslat, lng: this.buslon},
-                                destination:{lat:this.latMap, lng: this.lonMap},
-                                waypoints:this.busStopsLoca,
-                                optimizeWaypoints:true,
-                                travelMode: google.maps.TravelMode['DRIVING']
-                              }, (res, status) => {
-                                
-                                if(status == google.maps.DirectionsStatus.OK){
-                                  this.time = res.routes[0].legs[0].duration.text;
-                                  var leg = res.routes[ 0 ].legs[ 0 ];
-                                  this.map.clear;
-                                  this.addMarkerStart(leg.start_location);
-                                  // this.addMarkerEnd(leg.end_location);
-                                  this.directionsDisplay.setDirections(res);
-                                } else {
-                                  console.warn(status);
-                                }
-                              });
-                              google.maps.event.addListener(this.map, 'center_changed', () => {
-                                this.directionsDisplay= new google.maps.DirectionsRenderer(
-                                {suppressMarkers: true, preserveViewport:true, polylineOptions:{strokeOpacity: 1,
-                                  strokeWeight: 1}});
-                                });
-                              }
-                              // loadMap() {
-                                //   this.mapElement = document.getElementById('map');
-                                //   //this.locati = new LatLng(this.buslat, this.buslon); 
-                                //   let mapOptions: GoogleMapOptions = {
-                                  //     styles: [{ stylers: [
-                                    //       {saturation: -100}]}],
-                                    //     camera: {
-                                      //       target: {
-                                        //         lat: this.buslat,
-                                        //         lng: this.buslon
-                                        //       },
-                                        //       zoom: 18,
-                                        //       tilt: 10
-                                        //     }
-                                        //   };
+                                  //     let content = "<p>Bus " + this.busToTrack + " will arrive at " +this.endName+" in about " + this.time + " </p>";
+                                  //     this.addInfoWindow(this.end, content);
+                                  //   }
+                                  //   else{
+                                    //     this.end.setPosition(posi);
+                                    //   }
+                                    
+                                    // }
+                                    
+                                    addMarkers(){
+                                      var i = 0;
+                                      var len = this.busStops.length;
+                                      var image = {
+                                        url: '../assets/imgs/stop.png'};
+                                        for (; i < len; ) {
+                                          this.num = this.busStops[i].stop_sequence;
+                                          let locMark = new google.maps.LatLng(this.busStops[i].stop_lat, this.busStops[i].stop_lon);
+                                          let mark = new google.maps.Marker({
+                                            map: this.map,
+                                            position: locMark,
+                                            icon: image,
+                                            label: {text:""+this.num, color:"white"}
+                                          });
+                                          
+                                          let content = "<p>" + this.busStopsNames[i]+ " </p>";
+                                          this.addInfoWindow(mark, content);
+                                          // mark.setLabel(""+this.num);
+                                          mark.setPosition(locMark);
+                                          i++;
+                                        }
+                                      }
+                                      
+                                      showMap(){
+                                        this.confirmpage=false;
+                                        this.setBus=false;
                                         
-                                        //   this.map = this.googleMaps.create(this.mapElement, mapOptions);
+                                        this.viewM=true;
+                                        this.viewMap();
+                                      }
+                                      
+                                      addInfoWindow(marker, content){
                                         
-                                        //   // Wait the MAP_READY before using any methods.
-                                        //             this.directionsDisplay.setMap(this.map);
+                                        let infoWindow = new google.maps.InfoWindow({
+                                          content: content
+                                        });
                                         
-                                        //     this.map.one(GoogleMapsEvent.MAP_READY)
-                                        //       .then(() => {
-                                          //         alert('Map is ready!');
-                                          //       this.map.setTrafficEnabled(true);
-                                          //         let markerOptions: MarkerOptions = {
-                                            //     position: this.locati,
-                                            //     icon: { url : 'www/assets/imgs/bus.png' }
-                                            //       };
-                                            //     this.map.addMarker(markerOptions)
-                                            //     .then(
-                                            //       (marker: Marker) => {
-                                              //           this.markerBus=marker;
-                                              //         //marker.showInfoWindow();
-                                              //       }
-                                              //     );
+                                        google.maps.event.addListener(marker, 'click', () => {
+                                          infoWindow.open(this.map, marker);
+                                        });
+                                      }
+                                      
+                                      getETA(){
+                                        this.directionsService.route({
+                                          origin: {lat:this.buslat, lng: this.buslon},
+                                          destination:{lat:this.latMap, lng: this.lonMap},
+                                          waypoints:this.busStopsLoca,
+                                          optimizeWaypoints:true,
+                                          travelMode: google.maps.TravelMode['DRIVING']
+                                        }, (res, status) => {
+                                          
+                                          if(status == google.maps.DirectionsStatus.OK){
+                                            this.time = res.routes[0].legs[0].duration.text;
+                                          } else {
+                                            console.warn(status);
+                                          }
+                                        });
+                                      }
+                                      startNavigating(){
+                                        this.map.clear;
+                                        var polylineOptionsActual = new google.maps.Polyline({
+                                          strokeOpacity: 1,
+                                          strokeWeight: 1
+                                        });
+                                        this.directionsDisplay.setMap(this.map);
+                                        
+                                        this.directionsService.route({
+                                          origin: {lat:this.buslat, lng: this.buslon},
+                                          destination:{lat:this.latMap, lng: this.lonMap},
+                                          waypoints:this.busStopsLoca,
+                                          optimizeWaypoints:true,
+                                          travelMode: google.maps.TravelMode['DRIVING']
+                                        }, (res, status) => {
+                                          
+                                          if(status == google.maps.DirectionsStatus.OK){
+                                            this.time = res.routes[0].legs[0].duration.text;
+                                            var leg = res.routes[ 0 ].legs[ 0 ];
+                                            var i = 0;
+                                            var len = this.busStopsNames.length;
+                                            this.stopsAndEta = [];
+                                            var theTime=0;
+                                            for (; i < len; ) {
+                                              theTime= theTime + res.routes[ 0 ].legs[ i ].duration.value;
+                                              var date = new Date(theTime * 1000);                                   
+                                              if(date.getHours()>0)
+                                              {
+                                                if(date.getHours()==1){
+                                                  if(date.getMinutes()>0){
+                                                    if(date.getMinutes()==1){
+                                                      this.stopTime = date.getHours() + " hour " + date.getMinutes() + " min ";
+                                                    }
+                                                    else{
+                                                      this.stopTime = date.getHours() + " hour " + date.getMinutes() + " mins ";
+                                                    }
+                                                  }
+                                                  else{
+                                                    this.stopTime = date.getHours() + " hour";
+                                                  }
+                                                }
+                                                else{
+                                                  if(date.getMinutes()>0){
+                                                    if(date.getMinutes()==1){
+                                                      this.stopTime = date.getHours() + " hours " + date.getMinutes() + " min";
+                                                    }
+                                                    else{
+                                                      this.stopTime = date.getHours() + " hours " + date.getMinutes() + " mins";
+                                                    }
+                                                  }
+                                                  else{
+                                                    this.stopTime = date.getHours() + " hours";
+                                                  }
+                                                }
+                                              }
+                                              else{
+                                                if(date.getMinutes()>0){
+                                                  if(date.getMinutes()==1){
+                                                    this.stopTime = date.getMinutes() + " min";
+                                                  }
+                                                  else{
+                                                    this.stopTime = date.getMinutes() + " mins";
+                                                  }
+                                                }
+                                                else{
+                                                  if(date.getSeconds()<60){
+                                                    this.stopTime = "less than 1 min";
+                                                  }
+                                                }
+                                              }
+                                              console.log(this.stopTime);
                                               
+                                              this.firebaseService.getWaitInfo(this.busStops[0].stop_id).subscribe((resp)=>{
+                                                  this.waitingPass = resp[0].waiting_pass;
+                                              },
+                                              (err)=>{
+                                                console.log(err);
+                                              })
                                               
-                                              //     });
-                                              
-                                              //       this.repeat();
-                                              // }
-                                              
-                                              // getCoord(){
-                                                //   this.http.get('http://192.168.1.4/final/get.php').map(res => res.json()).subscribe(data => {
-                                                  //       this.response = data;
-                                                  //       //alert(this.response[0].lon);
-                                                  //       this.buslon = this.response[0].lon;
-                                                  //       this.buslat= this.response[0].lat;
-                                                  //   });
-                                                  // }
+                                              this.stopsAndEta.push({stop:this.busStopsNames[i], eta:this.stopTime, pass:this.waitingPass});
+                                              i++;
+                                            }
+                                            console.log(this.stopsAndEta);
+                                            this.events.publish('stops:added', JSON.stringify(this.stopsAndEta),this.busToTrack);
+                                            this.map.clear;
+                                            this.addMarkerStart(leg.start_location);
+                                            // this.addMarkerEnd(leg.end_location);
+                                            this.directionsDisplay.setDirections(res);
+                                          } else {
+                                            console.warn(status);
+                                          }
+                                        });
+                                        google.maps.event.addListener(this.map, 'center_changed', () => {
+                                          this.directionsDisplay= new google.maps.DirectionsRenderer(
+                                          {suppressMarkers: true, preserveViewport:true, polylineOptions:{strokeOpacity: 1,
+                                            strokeWeight: 1}});
+                                          });
+                                        }
+                                        // loadMap() {
+                                          //   this.mapElement = document.getElementById('map');
+                                          //   //this.locati = new LatLng(this.buslat, this.buslon); 
+                                          //   let mapOptions: GoogleMapOptions = {
+                                            //     styles: [{ stylers: [
+                                              //       {saturation: -100}]}],
+                                              //     camera: {
+                                                //       target: {
+                                                  //         lat: this.buslat,
+                                                  //         lng: this.buslon
+                                                  //       },
+                                                  //       zoom: 18,
+                                                  //       tilt: 10
+                                                  //     }
+                                                  //   };
                                                   
-                                                  // calculateAndDisplayRoute() {
-                                                    //     this.directionsService.route({
-                                                      //       origin: {lat:this.buslat, lng: this.buslon},
-                                                      //       destination:{lat:this.lat, lng: this.lon},
-                                                      //       travelMode: google.maps.TravelMode['DRIVING']
-                                                      //       }, (response, status) => {
-                                                        //       if(status == google.maps.DirectionsStatus.OK){
-                                                          //                 this.directionsDisplay.setDirections(response);
-                                                          //                   // this.directionsDisplay.setMap(this.map);
-                                                          //                 console.log(response);
-                                                          //                 console.log(response.routes[0].legs[0].duration.text);
-                                                          //             } else {
-                                                            //                 console.warn(status);
-                                                            //             }
-                                                            //     });
-                                                            //   }
-                                                            // startNavigating(){
-                                                              
-                                                              //         // directionsDisplay.setMap(this.map);
-                                                              
-                                                              //         this.directionsService.route({
-                                                                //             origin: {lat:5.7598, lng: 0.2197},
-                                                                //             destination:{lat:5.6037, lng: 0.1870},
-                                                                //             travelMode: google.maps.TravelMode['DRIVING']
-                                                                //         }, (res, status) => {
-                                                                  
-                                                                  //             if(status == google.maps.DirectionsStatus.OK){
-                                                                    //                 this.directionsDisplay.setDirections(res);
+                                                  //   this.map = this.googleMaps.create(this.mapElement, mapOptions);
+                                                  
+                                                  //   // Wait the MAP_READY before using any methods.
+                                                  //             this.directionsDisplay.setMap(this.map);
+                                                  
+                                                  //     this.map.one(GoogleMapsEvent.MAP_READY)
+                                                  //       .then(() => {
+                                                    //         alert('Map is ready!');
+                                                    //       this.map.setTrafficEnabled(true);
+                                                    //         let markerOptions: MarkerOptions = {
+                                                      //     position: this.locati,
+                                                      //     icon: { url : 'www/assets/imgs/bus.png' }
+                                                      //       };
+                                                      //     this.map.addMarker(markerOptions)
+                                                      //     .then(
+                                                      //       (marker: Marker) => {
+                                                        //           this.markerBus=marker;
+                                                        //         //marker.showInfoWindow();
+                                                        //       }
+                                                        //     );
+                                                        
+                                                        
+                                                        //     });
+                                                        
+                                                        //       this.repeat();
+                                                        // }
+                                                        
+                                                        // getCoord(){
+                                                          //   this.http.get('http://192.168.1.4/final/get.php').map(res => res.json()).subscribe(data => {
+                                                            //       this.response = data;
+                                                            //       //alert(this.response[0].lon);
+                                                            //       this.buslon = this.response[0].lon;
+                                                            //       this.buslat= this.response[0].lat;
+                                                            //   });
+                                                            // }
+                                                            
+                                                            // calculateAndDisplayRoute() {
+                                                              //     this.directionsService.route({
+                                                                //       origin: {lat:this.buslat, lng: this.buslon},
+                                                                //       destination:{lat:this.lat, lng: this.lon},
+                                                                //       travelMode: google.maps.TravelMode['DRIVING']
+                                                                //       }, (response, status) => {
+                                                                  //       if(status == google.maps.DirectionsStatus.OK){
+                                                                    //                 this.directionsDisplay.setDirections(response);
+                                                                    //                   // this.directionsDisplay.setMap(this.map);
+                                                                    //                 console.log(response);
+                                                                    //                 console.log(response.routes[0].legs[0].duration.text);
                                                                     //             } else {
                                                                       //                 console.warn(status);
                                                                       //             }
-                                                                      
-                                                                      //         });
-                                                                      
-                                                                      //     }
-                                                                      getCurr(){
-                                                                        this.geolocation.getCurrentPosition().then((resp) => {
-                                                                          this.buslon=resp.coords.longitude;
-                                                                          this.buslat=resp.coords.latitude;
-                                                                          this.locatiMap = new LatLng(this.buslat, this.buslon);
-                                                                          // this.getSpecific();
-                                                                          //alert(this.lon);
-                                                                          // resp.coords.latitude
-                                                                          // resp.coords.longitude
-                                                                        }).catch((error) => {
-                                                                          console.log('Error getting location', error);
-                                                                        });        
-                                                                      }
-                                                                      moveBus() {
-                                                                        this.getCurr();
-                                                                        console.log(this.buslat);
-                                                                        this.locatiMap = new LatLng(this.buslat, this.buslon);
-                                                                        this.startNavigating(); 
-                                                                        // this.map.moveCamera({
-                                                                          //   target: this.locati
-                                                                          // });
-                                                                        }
-                                                                      }
-                                                                      
-                                                                      
-                                                                      
+                                                                      //     });
+                                                                      //   }
+                                                                      // startNavigating(){
+                                                                        
+                                                                        //         // directionsDisplay.setMap(this.map);
+                                                                        
+                                                                        //         this.directionsService.route({
+                                                                          //             origin: {lat:5.7598, lng: 0.2197},
+                                                                          //             destination:{lat:5.6037, lng: 0.1870},
+                                                                          //             travelMode: google.maps.TravelMode['DRIVING']
+                                                                          //         }, (res, status) => {
+                                                                            
+                                                                            //             if(status == google.maps.DirectionsStatus.OK){
+                                                                              //                 this.directionsDisplay.setDirections(res);
+                                                                              //             } else {
+                                                                                //                 console.warn(status);
+                                                                                //             }
+                                                                                
+                                                                                //         });
+                                                                                
+                                                                                //     }
+                                                                                getCurr(){
+                                                                                  this.geolocation.getCurrentPosition().then((resp) => {
+                                                                                    this.buslon=resp.coords.longitude;
+                                                                                    this.buslat=resp.coords.latitude;
+                                                                                    this.locatiMap = new LatLng(this.buslat, this.buslon);
+                                                                                    // this.getSpecific();
+                                                                                    //alert(this.lon);
+                                                                                    // resp.coords.latitude
+                                                                                    // resp.coords.longitude
+                                                                                  }).catch((error) => {
+                                                                                    console.log('Error getting location', error);
+                                                                                  });        
+                                                                                }
+                                                                                moveBus() {
+                                                                                  this.getCurr();
+                                                                                  console.log(this.buslat);
+                                                                                  this.locatiMap = new LatLng(this.buslat, this.buslon);
+                                                                                  this.startNavigating(); 
+                                                                                  // this.map.moveCamera({
+                                                                                    //   target: this.locati
+                                                                                    // });
+                                                                                  }
+                                                                                }
+                                                                                
+                                                                                
+                                                                                

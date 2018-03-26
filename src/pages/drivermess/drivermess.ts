@@ -48,6 +48,10 @@ export class DriverMessPage {
     console.log(this.now);
     console.log(localStorage.getItem("busGlobal"))
   }
+    closeModal(){
+        this.navCtrl.pop();
+    }
+    
   sendMessage(){
     if(localStorage.getItem("busGlobal"))
         {
